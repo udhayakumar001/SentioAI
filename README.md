@@ -44,9 +44,10 @@ frontend/
 3. Activate virtual environment:
    - Windows: `.\venv\Scripts\activate`
    - Linux/Mac: `source venv/bin/activate`
-4. Install requirements: `pip install -r requirements.txt`
-5. Migrate database: `python manage.py migrate`
-6. Start server: `python manage.py runserver`
+4. Copy `.env.example` to `.env` for local development.
+5. Install requirements: `pip install -r requirements.txt`
+6. Migrate database: `python manage.py migrate`
+7. Start server: `python manage.py runserver`
 
 ### Frontend Setup
 1. Open a new terminal and navigate to `frontend/`
@@ -61,6 +62,18 @@ If you want to use MySQL instead of SQLite:
 
 ## Environment Variables
 Environment variables for the backend are handled through `.env`. Check `.env.example` in the `backend/` directory for configuration options.
+
+## Free Demo Deployment
+
+The repository includes starter deployment configuration for a personal, non-commercial demo:
+
+- **Frontend:** Vercel Hobby. Set the project root to `frontend` and configure `VITE_API_BASE_URL` to the deployed API URL ending in `/api/`. `frontend/vercel.json` routes client-side React paths back to the app.
+- **Backend:** Render Free using the root-level `render.yaml` Blueprint. It builds from `backend/`, collects static files, runs database migrations, and starts Django with Gunicorn. Render generates `SECRET_KEY`; provide a Neon PostgreSQL connection string as `DATABASE_URL` and the deployed Vercel origin as `CORS_ALLOWED_ORIGINS`.
+- **Database:** Neon Free PostgreSQL. Use the pooled connection string from Neon for `DATABASE_URL`. Its compute scales to zero after inactivity, so the first request may be delayed.
+
+Render Free services sleep after 15 minutes without traffic and have ephemeral local storage. Do not use SQLite for hosted history. Free database and web-service limits can change; check each provider's current terms before launch. The Hugging Face summarizer downloads and loads a PyTorch model, which may exceed Render Free's memory or respond slowly on a cold start. Confirm real analyzer requests work at runtime; if not, the summarizer will need a hosted inference service or a higher-memory backend.
+
+Vercel Hobby is restricted to personal, non-commercial use. The Vercel project must be connected to a Git repository; the hosting providers also require you to authorize access to your accounts. Never commit production secrets or `.env` files.
 
 ## API Endpoints
 - `GET /api/analyses/` - Retrieve all history records.
