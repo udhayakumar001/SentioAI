@@ -68,8 +68,10 @@ Environment variables for the backend are handled through `.env`. Check `.env.ex
 The repository includes starter deployment configuration for a personal, non-commercial demo:
 
 - **Frontend:** Vercel Hobby. Set the project root to `frontend` and configure `VITE_API_BASE_URL` to the deployed API URL ending in `/api/`. `frontend/vercel.json` routes client-side React paths back to the app.
-- **Backend:** Render Free using the root-level `render.yaml` Blueprint. It builds from `backend/`, collects static files, runs database migrations, and starts Django with Gunicorn. Render generates `SECRET_KEY`; provide a Neon PostgreSQL connection string as `DATABASE_URL` and the deployed Vercel origin as `CORS_ALLOWED_ORIGINS`.
+- **Backend:** Render Free using the root-level `render.yaml` Blueprint. It builds from `backend/`, collects static files, runs database migrations, and starts Django with Gunicorn. Render generates `SECRET_KEY`; provide the Neon PostgreSQL connection string as `DATABASE_URL`.
 - **Database:** Neon Free PostgreSQL. Use the pooled connection string from Neon for `DATABASE_URL`. Its compute scales to zero after inactivity, so the first request may be delayed.
+
+Deploy Neon first, then Render, then Vercel. Once Vercel provides its production URL, set `VITE_API_BASE_URL` in Vercel to `https://<render-service>.onrender.com/api/`, and set `CORS_ALLOWED_ORIGINS` in Render to `https://<vercel-project>.vercel.app` before redeploying the API.
 
 Render Free services sleep after 15 minutes without traffic and have ephemeral local storage. Do not use SQLite for hosted history. Free database and web-service limits can change; check each provider's current terms before launch. The Hugging Face summarizer downloads and loads a PyTorch model, which may exceed Render Free's memory or respond slowly on a cold start. Confirm real analyzer requests work at runtime; if not, the summarizer will need a hosted inference service or a higher-memory backend.
 
